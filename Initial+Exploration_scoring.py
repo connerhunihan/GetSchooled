@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import random
 from sklearn.linear_model import LogisticRegression
-df = pd.read_csv('ConsolidatedSchools')
+df = pd.read_csv('ConsolidatedSchools.csv')
 
 
 # In[4]:
