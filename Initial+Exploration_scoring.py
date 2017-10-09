@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import random
 from sklearn.linear_model import LogisticRegression
-df = pd.read_csv('/Users/michelleperetz/Google Drive/MIMS/YEAR 1/info 206 - python/group project i/ConsolidatedSchools (1).csv')
+df = pd.read_csv('ConsolidatedSchools')
 
 
 # In[4]:
@@ -66,7 +66,7 @@ Urbanization_dict
 
 # In[115]:
 
-choices_df = pd.read_csv('/Users/michelleperetz/Google Drive/MIMS/YEAR 1/info 206 - python/group project i/ProjectScenarios.csv')
+choices_df = pd.read_csv('ProjectScenarios_revisedmp.csv')
 
 
 # In[116]:
@@ -208,7 +208,7 @@ score_val = modelfit.score(X_test, Y_test)
 
 print('score:',score_val)
 
-input('if it shows 1 it means the "actual school" (the numbers i made up above) match the training data from the scenarios. if its 0, it doesnt. If we extend this to work with the enter consolidated schools csv then we can match our actual schools to the model)
+input('if it shows 1 it means the "actual school" (the numbers i made up above) match the training data from the scenarios. if its 0, it doesnt. If we extend this to work with the enter consolidated schools csv then we can match our actual schools to the model')
 
 
 training_accuracy=logreg.score(X,Y)
