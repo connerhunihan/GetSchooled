@@ -37,7 +37,16 @@ def college_selection ():
                + '% more presigious than other schools\n' + Urbanization_dict[choices_df['CITY_SIZE'].iloc[row_number + 2]] + '\n\n')
         #can uncomment the line below and comment the input line to randomly select choices instead of manually entering 
         #scenario_choice = random.randint(1,3)  
-        scenario_choice = int(input("Please select one of the colleges: ")) #NOTE: need to add while loop to insist user puts a number between 1 and 3 in order to continue 
+        
+        while True:
+            scenario_choice = int(input("Please select one of the colleges: "))
+            print()
+            if scenario_choice in [1,2,3]:
+                break
+            else:
+                print('Please input number 1, 2 or 3! try again.')
+                continue
+    
         list_of_answers.append(scenario_choice)
         row_number += 3
     return list_of_answers
@@ -221,11 +230,12 @@ if len(matched_schools) > 0:
                 df_index = matched_schools[i][1] #df_index is the index into df to get info on actual school[i]
                 print(df['INSTNM'][df_index])
                 print('\tState of Institution        : ',df['STABBR'][df_index])
-                print('\tStudent Faculty Ratio       : ',df['SFRatio'][df_index])
-                print('\tSchool Ranking - Percnentile: ',df['PERCENTILE'][df_index])
+                print('\tStudent Faculty Ratio       : ', str(int(round(df['SFRatio'][df_index]))) + ':1')
+                print('\tSchool Ranking - Percentile : ', str(round(float(df['PERCENTILE'][df_index].strip('%')))) + '%')
                 print('\tSchool Size                 : ',['Small','Mid-sized','Large'][int(df['ACTUAL SIZE (S/M/L)'][df_index])-1])
                 print('\tTown/City Size              : ',['Large City','Mid-sized Town','Small Town'][int(df['URBANIZATION'][df_index])-1])
                 print('\tAdmission Rate              : ', str(int(round(df['ADM_RATE'][df_index]*100))) + '%')
+                print('\tAverage SAT Score           : ', str(int(round(df['SAT_AVG'][df_index]))))
                 print()
             
 else:            
