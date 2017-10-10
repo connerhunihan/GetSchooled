@@ -14,6 +14,9 @@ programmer_testing = False #during development print information to verify the c
 # Link for easy way to do calculations - https://www.youtube.com/watch?v=5TPNOC27bk0
 
 def college_selection ():
+    
+    '''This function gathers all of the user input for fictional colleges. It cycles through 20 scenarios, with 3 colleges each, and it adds each selection to list_of_answers. After converting them to 0's and 1's in a later step, these will be added to the first column of the ProjectScenarios csv file".'''
+   
     list_of_answers = []
     Size_dict = {1: 'Small (Less than 5,000 students)', 2: 'Mid-sized (5,000 - 15,000 students)', 3: 'Large (Greater than 15,000 students)'}
     Urbanization_dict = {1: 'Large City', 2: 'Mid-sized town', 3: 'Small Town'}
@@ -60,7 +63,8 @@ def score_schools(choices_df,df,match_level):
     df = dataframe for 142 actual schools that we will try to match with
     match_leve = the C level used in the log regression to determine strictness, as chosen by the user (user input: 0-4)
     '''
-    match_level_list = [1000,1,0.1,0.01,0.05] # 0 = 1000, 1 = 1, 2 = 0.1, 3 = 0.01, 4 = 0.05. smaller the matching level (C parameter) the stricter the matching will be 
+    match_level_list =[0.01, 0.05, 0.1, 1, 1000]
+    # 4 = 1000, 3 = 1, 2 = 0.1, 1 = 0.01, 0 = 0.05. smaller the matching level (C parameter) the stricter the matching will be 
     
     X_train = choices_df.iloc[:, 1:9] #X_train is all rows in choices_df, columns 1-8 (exclude choice col which is col 0)
     Y_train = choices_df['CHOICE'] #Y_train is CHOICE col in choices_df, includes 1 for chosen scenario (20 of them), rest are 0. Needed to indicate selected scenarios to be included in logreg model 
@@ -153,7 +157,7 @@ choices_df.shape
 state_choice = (input('Please select which states you are interested in exploring (OR, WA, UT, etc.) Please separate by commas, or enter "all" for all states: ')).upper()
 
 #remove if we dont want to ask about strictness. user can select one out of 5 options for strictness. 
-match_level = int(input('Please select matching level 0 to 4 (0=loose 4=strict): ')) 
+match_level = int(input('Please select matching level 0 to 4 (0 = strict, 4 = loose): ')) 
 
 input("Now it's time to make your choices! Press enter to continue.")
 print()
