@@ -1,0 +1,83 @@
+VARIABLES
+Global
+	counter for college_selection
+
+Not Sure
+	Dataframes
+		df dataframes (SCHOOL DATA)
+		choices_df dataframe (CHOICES DATA)
+		X_test (MATCH BTWN CHOICE AND ACTUAL SCHOOL)
+	list_of_answers
+	state_choice
+	match_level
+	scenario_choice
+
+OUTLINE
+setup
+	create interface —— setup()
+Pass data 
+	input from user:
+		state(s) -> state_choice —— record_state_selection()
+		matching -> match_level —— record_match_level()
+update_choices
+	(Trigger) display string of collegeArray —— college_selection()
+Pass data 
+	college clicks -> scenario_choice —— record_college_selection()
+update_choices
+	(Trigger) display new string of collegeArray —— college_selection()
+Calculate
+	prepare data 
+		turn list_of_answers into values in 'CHOICE' column (ln152-160) —— 
+		prepare_choices()
+	match schools (ln167)
+		based on state and match level —— match_schools()
+	score schools (ln45-125)
+update_results
+	display matched schools
+	display matched school details
+
+
+FUNCTIONS
+setup 
+	create tkinter framework
+
+record_state_selection
+	enter string of states
+record_match_selection
+	enter integer of match level 
+
+update_tell
+	display final, matching schools
+	display school information
+		
+college_selection
+	display three fictional college scenarios
+	update counter
+
+record_college_selection
+	add 1, 2, or 3 from button click to scenario_choice array
+
+record_state_selection
+	add states entered to state_choice array
+
+prepare_choices
+	turn list_of_answers(ln152)  into choices_df['CHOICE'] (ln160)
+
+match_schools
+	refine list of actual schools into list of schools that match selection 		(ln167-178)
+
+score_schools
+	compare choices with actual schools(ln
+
+QUESTIONS
+1. How to set up functions across two modules such that there is no cyclical-referencing?
+	if __name__ == "__main__":
+	    setup()
+	    update()
+2. Should UI setup be a class object that is called?
+2. How to pass data from data layer onto UI layer? (record_selection/collegeChoice…ln45 in functions.py)
+3. How to display information from data-module on UI? (college_selection)
+4. Where do variables at top need to be declared?
+
+
+
