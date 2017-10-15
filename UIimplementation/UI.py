@@ -11,16 +11,15 @@ by a group of graduate students at Berkeley's School of Information including:
 The program is designed to help students find colleges.  
 
 TO DO:
+0. WHY ISN'T COLLEGE_SELECTION DEFINED?!?
 1. Format – replacing pack() w/ grid()
 """
 
-# If testing, change flag to True 
-testing = True
+programmer_testing = True #during development print information to verify the code works - set to False to supress printing
 	
 LARGE_FONT = ("Verdana", 21)
 SECOND_FONT = ("Verdana", 12)
 
-list_of_answers = []
 states = []
 match = []
 
@@ -33,9 +32,8 @@ def record_button_3(*args):
 
 def record_selection (scenario_choice):    
     list_of_answers.append(scenario_choice)
-    if testing == True:
-    	print("List of college selections: ", list_of_answers)
-    	print("Number of clicks: ", len(list_of_answers))
+    if programmer_testing == True:
+    	print("list_of_answers: ", list_of_answers)
 
 def erase_selections (*args):
 	list_of_answers.clear()
@@ -67,13 +65,19 @@ class GetSchooled(tk.Tk):
 		frame = self.frames[cont]
 		frame.tkraise()		#raises frame to the front
 
-	def GetEntries(self, StartPage):
-		'''record state(s) and matches user has entered'''
-		states.append(StartPage.stateEntered.get())
+	def GetMatch(self, StartPage):
+		'''record matches coefficienct'''
 		match.append(StartPage.matchEntered.get())
-		if testing == True:
-			print("States entered: ", states)
+		if programmer_testing == True:
 			print("Match level entered: ", match)
+		return match
+
+	def GetState(self, StartPage):
+		'''record state(s) coefficient(s)'''
+		states.append(StartPage.stateEntered.get())
+		if programmer_testing == True:
+			print("States entered: ", states)
+		return states
 
 class StartPage(tk.Frame):
 	def __init__(self, parent, controller):	
@@ -104,7 +108,8 @@ class StartPage(tk.Frame):
 
 	def submit_entries (self, PageOne, app):
 		'''app.GetEntries adds values to their respective lists; show_frame navigates to PageOne screen'''
-		app.GetEntries(self)
+		app.GetMatch(self)
+		app.GetState(self)
 		app.show_frame(PageOne)
 
 class PageOne(tk.Frame):
@@ -229,7 +234,7 @@ class PageFive(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="PageFive", font=LARGE_FONT)
+		label = tk.Label(self, text="Page Five", font=LARGE_FONT)
 		label.pack(pady=10, padx=10)
 
 		# pulls hypothetical colleges as a string returned from college_selection function
@@ -258,12 +263,12 @@ class ResultsPage(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="RESULTS", font=LARGE_FONT)
+		label = tk.Label(self, text="Results", font=LARGE_FONT)
 		label.pack(pady=10, padx=10)
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		results = tk.StringVar()
-		results.set('''function to display scores''')
+		results.set(Schools.DisplayMatches(self))
 		display = tk.Label(self, textvariable=results)
 		display.pack()
 
@@ -273,18 +278,17 @@ class ResultsPage(tk.Frame):
 		displayButton = tk.Button(self, text="SHOW ME", 
 			command=lambda: controller.show_frame(DisplayPage))
 		displayButton.pack(pady=25)
-		displayButton.bind("<1>", erase_selections)
 
 class DisplayPage(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="RESULTS", font=LARGE_FONT)
+		label = tk.Label(self, text="School Information", font=LARGE_FONT)
 		label.pack(pady=10, padx=10)
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		results = tk.StringVar()
-		results.set('''function to display scores''')
+		# results.set('''Class.Schools.DisplayInfo''')
 		display = tk.Label(self, textvariable=results)
 		display.pack()
 

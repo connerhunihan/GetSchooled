@@ -1,23 +1,43 @@
+import UI
 import numpy as np
 import pandas as pd
 import random
 from sklearn.linear_model import LogisticRegression
+# from UI import GetSchooled
 
 programmer_testing = False #during development print information to verify the code works - set to False to supress printing
 
-# Globally defined to allow functions access into actual schools csv and dataframe 'df'
+list_of_answers = []
+matched_schools = []
+
 df = pd.read_csv('ConsolidatedSchools.csv')
 df = df.iloc[:142]
-
-# Globally defined to allow functions access into scenario schools csv and dataframe 'choices_df'
 choices_df = pd.read_csv('ProjectScenarios_revisedmp.csv')
 choices_df.shape
+
+class Schools():
+    # def __init__(self, df, choices_df, list_of_answers):
+    #     # actual schools csv and dataframe 'df'
+    #     self.df = pd.read_csv('ConsolidatedSchools.csv')
+    #     self.df = df.iloc[:142]
+    #     # scenario schools csv and dataframe 'choices_df'
+    #     self.choices_df = pd.read_csv('ProjectScenarios_revisedmp.csv')
+    #     self.choices_df.shape
+    #     self.list_of_answers = list_of_answers
+
+    def DisplayMatches(self):
+        convert_list_of_schools()
+        match_level = UI.GetSchooled.GetMatch()
+        match_schools()
+        print(display_match())
 
 def college_selection (row_number):
     '''This function gathers all of the user input for fictional colleges. It cycles through 20 scenarios, with 3 colleges each, 
     and it adds each selection to list_of_answers. After converting them to 0's and 1's in a later step, these will be added 
     to the first column of the ProjectScenarios csv file".'''
-        
+    choices_df = pd.read_csv('ProjectScenarios_revisedmp.csv')
+    choices_df.shape
+
     row_number *= 3
     Size_dict = {1: 'Small (Less than 5,000 students)', 2: 'Mid-sized (5,000 - 15,000 students)', 3: 'Large (Greater than 15,000 students)'}
     Urbanization_dict = {1: 'Large City', 2: 'Mid-sized town', 3: 'Small Town'}
@@ -25,9 +45,8 @@ def college_selection (row_number):
     college1 = ('COLLEGE 1' + '\n' + str(choices_df['SFRATIO'].iloc[row_number]) + ':1 Student-faculty ratio' + ' \n' + Size_dict[choices_df['BODY_SIZE'].iloc[row_number]] + '\n' + str(choices_df['PERCENTILE'].iloc[row_number]) + '% more presigious than other schools\n' + Urbanization_dict[choices_df['CITY_SIZE'].iloc[row_number]] + '\n')
     college2 = ('COLLEGE 2' + '\n' + str(choices_df['SFRATIO'].iloc[row_number + 1]) + ':1 Student-faculty ratio' + '\n' + Size_dict[choices_df['BODY_SIZE'].iloc[row_number + 1]] + '\n' + str(choices_df['PERCENTILE'].iloc[row_number+1]) + '% more presigious than other schools\n' + Urbanization_dict[choices_df['CITY_SIZE'].iloc[row_number+1]] + '\n')
     college3 = ('COLLEGE 3' + '\n' + str(choices_df['SFRATIO'].iloc[row_number + 2]) + ':1 Student-faculty ratio' + '\n' + Size_dict[choices_df['BODY_SIZE'].iloc[row_number + 2]] + '\n' + str(choices_df['PERCENTILE'].iloc[row_number + 2]) + '% more presigious than other schools\n' + Urbanization_dict[choices_df['CITY_SIZE'].iloc[row_number + 2]] + '\n')
-    collegeList = [college1 + "\n" + "\n" + college2 + "\n" + "\n" + college3]
+    collegeList = college1 + "\n" + "\n" + college2 + "\n" + "\n" + college3
     return collegeList
-    # list_of_answers.append(scenario_choice)
 
 def score_schools(choices_df,df,match_level):
     ''' 
@@ -111,7 +130,7 @@ def score_schools(choices_df,df,match_level):
     #our function returns the array of scores for each actual school
     return scores
 
-def converting_data ():
+def convert_list_of_schools ():
     '''This function takes the list of answers submitted by the user and turns it into a usable column in the choice_df dataframe'''
     #Taking the list of answers and getting them into 0's and 1's
     choice_column_unflattened = [[1, 0, 0] if item == 1 else [0, 1, 0] if item == 2 else [0, 0, 1] if item == 3 else 'None' for item in list_of_answers]
@@ -119,7 +138,8 @@ def converting_data ():
     #Flattening the nested list into a final list and then converting it to a one-dimensional array
     choice_column_not_array = [item for sub_list in choice_column_unflattened for item in sub_list]
     choice_column = np.array(choice_column_not_array)
-    choices_df['CHOICE'] = choice_column
+    print(choices_df)
+    # choices_df['CHOICE'] = choice_column
 
 def match_schools ():
     '''This function matches user-submitted preferences with actual schools of corresponding values'''
@@ -128,7 +148,6 @@ def match_schools ():
 
     #we will now create a list called matched_schools which will contain tuples of the schools that match the user state choices and have a score of more than 0 (meaning they match). 
     #the list has tuples of each matching school (score of school, index in df)
-    matched_schools = []
     for i in range(len(df)):
         #user only schools that match user input for chosen states
         if df['STABBR'][i] not in state_choice and state_choice != 'ALL':
@@ -141,7 +160,6 @@ def match_schools ():
     #Sort matched schools list by descending score (first item in list should be highest score)        
     matched_schools = sorted(matched_schools,reverse=True)
 
-
 def display_match ():
     """This function presents the outcome of schools that matchi the user's stated interest """
     if len(matched_schools) > 0:
@@ -150,12 +168,10 @@ def display_match ():
             #insert code to print user name, and other information (what states they chose (state_choice), level of strictness as applicable)
             if len(matched_schools) > 9:
                 #if there are at least 10 schools, we print the top 10
-                print('Top 10 school matches from best to last fit:')
-                print()
+                response = 'Top 10 school matches from best to last fit:'
             else:
                 #if there are less than 10 matches, we print this text
-                print('School matches from best to last fit:')
-                print()
+                response = 'School matches from best to last fit:'
         
         #loop for all matched schools
         for i in range(len(matched_schools)):
@@ -172,25 +188,26 @@ def display_match ():
                 #this prints the list of matched schools for users (only the top 10)
                 n += 1
                 if n < 11:
-                    print(n,'\t',df['INSTNM'][df_index])
-                    
-        if input('Show matched schools information (Y,N) :').upper() == 'Y':
-            #if user says Y (yes) - we print specific information about those top 10 matched schools. this is where we can add additional information - admission rate, ACT/SAT scores, etc. 
-            print()
-            n = 0
-            for i in range(len(matched_schools)):       
-                n += 1 #increase match school counter to present top 10
-                if n < 11:
-                    df_index = matched_schools[i][1] #df_index is the index into df to get info on actual school[i]
-                    print(df['INSTNM'][df_index])
-                    print('\tState of Institution        : ',df['STABBR'][df_index])
-                    print('\tStudent Faculty Ratio       : ',df['SFRatio'][df_index])
-                    print('\tSchool Ranking - Percnentile: ',df['PERCENTILE'][df_index])
-                    print('\tSchool Size                 : ',['Small','Mid-sized','Large'][int(df['ACTUAL SIZE (S/M/L)'][df_index])-1])
-                    print('\tTown/City Size              : ',['Large City','Mid-sized Town','Small Town'][int(df['URBANIZATION'][df_index])-1])
-                    print('\tAdmission Rate              : ', str(int(round(df['ADM_RATE'][df_index]*100))) + '%')
-                    print()
-                
+                    schools = n,'\t',df['INSTNM'][df_index]
+        return response + schools            
+        # if input('Show matched schools information (Y,N) :').upper() == 'Y':
+        #     #if user says Y (yes) - we print specific information about those top 10 matched schools. this is where we can add additional information - admission rate, ACT/SAT scores, etc. 
+        #     print()
+        #     n = 0
+        #     for i in range(len(matched_schools)):       
+        #         n += 1 #increase match school counter to present top 10
+        #         if n < 11:
+        #             df_index = matched_schools[i][1] #df_index is the index into df to get info on actual school[i]
+        #             print(df['INSTNM'][df_index])
+        #             print('\tState of Institution        : ',df['STABBR'][df_index])
+        #             print('\tStudent Faculty Ratio       : ',df['SFRatio'][df_index])
+        #             print('\tSchool Ranking - Percnentile: ',df['PERCENTILE'][df_index])
+        #             print('\tSchool Size                 : ',['Small','Mid-sized','Large'][int(df['ACTUAL SIZE (S/M/L)'][df_index])-1])
+        #             print('\tTown/City Size              : ',['Large City','Mid-sized Town','Small Town'][int(df['URBANIZATION'][df_index])-1])
+        #             print('\tAdmission Rate              : ', str(int(round(df['ADM_RATE'][df_index]*100))) + '%')
+        #             print()
+    
     else:            
-        print('Total Matches',len(matched_schools))
+        matches = 'Total Matches',len(matched_schools)
+        return matches
 
