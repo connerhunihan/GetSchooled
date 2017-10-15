@@ -32,7 +32,7 @@ def record_button_3(*args):
 
 def record_selection (scenario_choice):    
     list_of_answers.append(scenario_choice)
-    if programmer_testing == True:
+    if programmer_testing:
     	print("list_of_answers: ", list_of_answers)
 
 def erase_selections (*args):
@@ -60,22 +60,22 @@ class GetSchooled(tk.Tk):
 		
 		self.show_frame(StartPage)
 
-	def show_frame(self, cont):	#cont dictates which key number frame to show on front
-		'''raises frame to active view-level'''
+	def show_frame(self, cont):	
+		'''raises frame to active view-level, cont dictrates which frame'''
 		frame = self.frames[cont]
 		frame.tkraise()		#raises frame to the front
 
-	def GetMatch(self, StartPage):
+	def get_match(self, StartPage):
 		'''record matches coefficienct'''
 		match.append(StartPage.matchEntered.get())
-		if programmer_testing == True:
+		if programmer_testing:
 			print("Match level entered: ", match)
 		return match
 
-	def GetState(self, StartPage):
+	def get_state(self, StartPage):
 		'''record state(s) coefficient(s)'''
 		states.append(StartPage.stateEntered.get())
-		if programmer_testing == True:
+		if programmer_testing:
 			print("States entered: ", states)
 		return states
 
@@ -108,8 +108,8 @@ class StartPage(tk.Frame):
 
 	def submit_entries (self, PageOne, app):
 		'''app.GetEntries adds values to their respective lists; show_frame navigates to PageOne screen'''
-		app.GetMatch(self)
-		app.GetState(self)
+		app.get_match(self)
+		app.get_state(self)
 		app.show_frame(PageOne)
 
 class PageOne(tk.Frame):
@@ -121,7 +121,7 @@ class PageOne(tk.Frame):
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
-		colleges.set(college_selection(0))
+		colleges.set(college_selection(0, choices_df))
 		display = tk.Label(self, textvariable=colleges)
 		display.pack()
 
@@ -150,7 +150,7 @@ class PageTwo(tk.Frame):
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
-		colleges.set(college_selection(0))
+		colleges.set(college_selection(1, choices_df))
 		display = tk.Label(self, textvariable=colleges)
 		display.pack()
 
@@ -180,7 +180,7 @@ class PageThree(tk.Frame):
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
-		colleges.set(college_selection(0))
+		colleges.set(college_selection(2, choices_df))
 		display = tk.Label(self, textvariable=colleges)
 		display.pack()
 
@@ -210,7 +210,7 @@ class PageFour(tk.Frame):
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
-		colleges.set(college_selection(0))
+		colleges.set(college_selection(3, choices_df))
 		display = tk.Label(self, textvariable=colleges)
 		display.pack()
 
@@ -239,7 +239,7 @@ class PageFive(tk.Frame):
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
-		colleges.set(college_selection(0))
+		colleges.set(college_selection(4, choices_df))
 		display = tk.Label(self, textvariable=colleges)
 		display.pack()
 
