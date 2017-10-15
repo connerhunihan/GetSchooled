@@ -1,9 +1,10 @@
+# from UI import GetSchooled
 from UI import GetSchooled
+
 import numpy as np
 import pandas as pd
 import random
 from sklearn.linear_model import LogisticRegression
-# from UI import GetSchooled
 
 programmer_testing = False #during development print information to verify the code works - set to False to supress printing
 
@@ -15,22 +16,23 @@ df = df.iloc[:142]
 choices_df = pd.read_csv('ProjectScenarios_revisedmp.csv')
 choices_df.shape
 
-class Schools():
-    # def __init__(self, df, choices_df, list_of_answers):
-    #     # actual schools csv and dataframe 'df'
-    #     self.df = pd.read_csv('ConsolidatedSchools.csv')
-    #     self.df = df.iloc[:142]
-    #     # scenario schools csv and dataframe 'choices_df'
-    #     self.choices_df = pd.read_csv('ProjectScenarios_revisedmp.csv')
-    #     self.choices_df.shape
-    #     self.list_of_answers = list_of_answers
+# class Schools():
+#     # def __init__(self, df, choices_df, list_of_answers):
+#     #     # actual schools csv and dataframe 'df'
+#     #     self.df = pd.read_csv('ConsolidatedSchools.csv')
+#     #     self.df = df.iloc[:142]
+#     #     # scenario schools csv and dataframe 'choices_df'
+#     #     self.choices_df = pd.read_csv('ProjectScenarios_revisedmp.csv')
+#     #     self.choices_df.shape
+#     #     self.list_of_answers = list_of_answers
 
-    def DisplayMatches(self):
-        score_schools(choices_df, df, GetSchooled.get_match(StartPage))
-        match_schools()
-        print(display_match())
+#     def DisplayMatches(self):
+#         score_schools(choices_df, df, GetSchooled.get_match(StartPage))
+#         match_schools()
+#         print(display_match())
 
-def college_selection (row_number, choices_df):
+
+def college_selection(row_number, choices_df):
     '''This function gathers all of the user input for fictional colleges. It cycles through 20 scenarios, with 3 colleges each, 
     and it adds each selection to list_of_answers. After converting them to 0's and 1's in a later step, these will be added 
     to the first column of the ProjectScenarios csv file".'''
@@ -100,7 +102,7 @@ def score_schools(choices_df,df,match_level):
      
     #run the decision_function method that will score the actual schools in X_test against the training data (20 scenarios). it will return an array (scores) with a score for each actual school. 
     scores = logreg.decision_function(X_test)
-        
+
 
     if programmer_testing:
         #this only prints if programmer_testing = True. This prints information about each of the 20 scenario choice schools. We only print schools (X_train values) whose row in Y_train choice column = 1. 
@@ -128,7 +130,7 @@ def score_schools(choices_df,df,match_level):
     #our function returns the array of scores for each actual school
     return scores
 
-def calculate_matched_schools (list_of_answers):
+def calculate_matched_schools(list_of_answers):
     '''This function returns a list of matched schools based on the users preference.'''
 
     #Taking the list of answers and getting them into 0's and 1's
@@ -159,7 +161,8 @@ def calculate_matched_schools (list_of_answers):
     matched_schools = sorted(matched_schools,reverse=True)
     return matched_schools
 
-def display_matched_schools (matched_schools):
+def display_matched_schools():
+    matched_schools = calculate_matched_schools(list_of_answers)
     if len(matched_schools) > 0:
         n = 0 #counter for # of matches
         if not programmer_testing:
@@ -192,7 +195,8 @@ def display_matched_schools (matched_schools):
         matches = 'Total Matches',len(matched_schools)
         return matches
 
-def display_school_info (matched_schools):
+def display_school_info():
+    matched_schools = calculate_matched_schools(list_of_answers)
     n = 0
     for i in range(len(matched_schools)):       
         n += 1 #increase match school counter to present top 10

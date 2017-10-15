@@ -268,7 +268,7 @@ class ResultsPage(tk.Frame):
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		results = tk.StringVar()
-		results.set(Schools.DisplayMatches(self))
+		results.set(display_matched_schools())
 		display = tk.Label(self, textvariable=results)
 		display.pack()
 
@@ -288,7 +288,7 @@ class DisplayPage(tk.Frame):
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		results = tk.StringVar()
-		# results.set('''Class.Schools.DisplayInfo''')
+		results.set(display_school_info())
 		display = tk.Label(self, textvariable=results)
 		display.pack()
 

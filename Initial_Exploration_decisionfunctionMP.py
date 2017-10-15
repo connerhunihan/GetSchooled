@@ -14,9 +14,6 @@ programmer_testing = False #during development print information to verify the c
 # Link for easy way to do calculations - https://www.youtube.com/watch?v=5TPNOC27bk0
 
 def college_selection ():
-    
-    '''This function gathers all of the user input for fictional colleges. It cycles through 20 scenarios, with 3 colleges each, and it adds each selection to list_of_answers. After converting them to 0's and 1's in a later step, these will be added to the first column of the ProjectScenarios csv file".'''
-   
     list_of_answers = []
     Size_dict = {1: 'Small (Less than 5,000 students)', 2: 'Mid-sized (5,000 - 15,000 students)', 3: 'Large (Greater than 15,000 students)'}
     Urbanization_dict = {1: 'Large City', 2: 'Mid-sized town', 3: 'Small Town'}
@@ -40,21 +37,10 @@ def college_selection ():
                + '% more presigious than other schools\n' + Urbanization_dict[choices_df['CITY_SIZE'].iloc[row_number + 2]] + '\n\n')
         #can uncomment the line below and comment the input line to randomly select choices instead of manually entering 
         #scenario_choice = random.randint(1,3)  
-        
-        while True:
-            scenario_choice = int(input("Please select one of the colleges: "))
-            print()
-            if scenario_choice in [1,2,3]:
-                break
-            else:
-                print('Please input number 1, 2 or 3! try again.')
-                continue
-    
+        scenario_choice = int(input("Please select one of the colleges: ")) #NOTE: need to add while loop to insist user puts a number between 1 and 3 in order to continue 
         list_of_answers.append(scenario_choice)
         row_number += 3
     return list_of_answers
-
-
 
 def score_schools(choices_df,df,match_level):
     ''' 
@@ -63,8 +49,7 @@ def score_schools(choices_df,df,match_level):
     df = dataframe for 142 actual schools that we will try to match with
     match_leve = the C level used in the log regression to determine strictness, as chosen by the user (user input: 0-4)
     '''
-    match_level_list =[0.01, 0.05, 0.1, 1, 1000]
-    # 4 = 1000, 3 = 1, 2 = 0.1, 1 = 0.01, 0 = 0.05. smaller the matching level (C parameter) the stricter the matching will be 
+    match_level_list = [1000,1,0.1,0.01,0.05] # 0 = 1000, 1 = 1, 2 = 0.1, 3 = 0.01, 4 = 0.05. smaller the matching level (C parameter) the stricter the matching will be 
     
     X_train = choices_df.iloc[:, 1:9] #X_train is all rows in choices_df, columns 1-8 (exclude choice col which is col 0)
     Y_train = choices_df['CHOICE'] #Y_train is CHOICE col in choices_df, includes 1 for chosen scenario (20 of them), rest are 0. Needed to indicate selected scenarios to be included in logreg model 
@@ -141,7 +126,7 @@ def score_schools(choices_df,df,match_level):
 
 
 
-# In[119]:
+
 
 
 #read actual schools csv into dataframe 'df'
@@ -151,13 +136,15 @@ df = df.iloc[:142]
 #read scenario schools csv into a dataframe 'choices_df'
 choices_df = pd.read_csv('ProjectScenarios_revisedmp.csv')
 choices_df.shape
+print(choices_df['CHOICE'])
+
 
 #USER INPUT STATE
 #I programmed this so they enter in states "OR, WA, CA, etc." to filter schools by state. but we can change it to region. Just wanted to make sure it worked. ***We need a more comprehensive welcome message + ask for their name***
 state_choice = (input('Please select which states you are interested in exploring (OR, WA, UT, etc.) Please separate by commas, or enter "all" for all states: ')).upper()
 
 #remove if we dont want to ask about strictness. user can select one out of 5 options for strictness. 
-match_level = int(input('Please select matching level 0 to 4 (0 = strict, 4 = loose): ')) 
+match_level = int(input('Please select matching level 0 to 4 (0=loose 4=strict): ')) 
 
 input("Now it's time to make your choices! Press enter to continue.")
 print()
@@ -234,12 +221,11 @@ if len(matched_schools) > 0:
                 df_index = matched_schools[i][1] #df_index is the index into df to get info on actual school[i]
                 print(df['INSTNM'][df_index])
                 print('\tState of Institution        : ',df['STABBR'][df_index])
-                print('\tStudent Faculty Ratio       : ', str(int(round(df['SFRatio'][df_index]))) + ':1')
-                print('\tSchool Ranking - Percentile : ', str(round(float(df['PERCENTILE'][df_index].strip('%')))) + '%')
+                print('\tStudent Faculty Ratio       : ',df['SFRatio'][df_index])
+                print('\tSchool Ranking - Percnentile: ',df['PERCENTILE'][df_index])
                 print('\tSchool Size                 : ',['Small','Mid-sized','Large'][int(df['ACTUAL SIZE (S/M/L)'][df_index])-1])
                 print('\tTown/City Size              : ',['Large City','Mid-sized Town','Small Town'][int(df['URBANIZATION'][df_index])-1])
                 print('\tAdmission Rate              : ', str(int(round(df['ADM_RATE'][df_index]*100))) + '%')
-                print('\tAverage SAT Score           : ', str(int(round(df['SAT_AVG'][df_index]))))
                 print()
             
 else:            
