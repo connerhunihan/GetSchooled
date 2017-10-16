@@ -929,7 +929,7 @@ def calculate_matched_schools(list_of_answers):
 
 
 def display_matched_schools():
-	
+	'''This fucntion displays information about the top 10 matched schools or, if there are less than 10, the names of the schools that matched'''
 	# Might want to comment back this line below in:
 	print("I am being exectured now!")
 	matched_schools = calculate_matched_schools(list_of_answers)
@@ -937,7 +937,6 @@ def display_matched_schools():
 
 	if len(matched_schools) > 0:
 		n = 0 #counter for # of matches
-			#insert code to print user name, and other information (what states they chose (state_choice), level of strictness as applicable)
 		if len(matched_schools) > 9:
 			#if there are at least 10 schools, we print the top 10
 			response = 'Top 10 school matches from best to last fit: \n'
@@ -972,6 +971,7 @@ def display_matched_schools():
 	return matches
 
 def display_school_info():
+    '''This function consolidates the specific information about the top 10 matched schools (name, ratio, percentile, size, town, admission rate, SAT score.)'''
 	matched_schools = calculate_matched_schools(list_of_answers)
 	n = 0
 	school_info = ""
