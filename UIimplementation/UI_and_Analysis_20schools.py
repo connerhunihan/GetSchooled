@@ -971,7 +971,6 @@ def display_matched_schools():
 	return matches
 
 def display_school_info():
-    '''This function consolidates the specific information about the top 10 matched schools (name, ratio, percentile, size, town, admission rate, SAT score.)'''
 	matched_schools = calculate_matched_schools(list_of_answers)
 	n = 0
 	school_info = ""
