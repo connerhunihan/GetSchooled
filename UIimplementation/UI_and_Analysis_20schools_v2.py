@@ -1,5 +1,9 @@
 import tkinter as tk
 
+#Texst extension imports
+from tkinter import Frame, Variable, Scrollbar, Text
+from tkinter.constants import VERTICAL, RIGHT, LEFT, BOTH, END, Y
+
 import numpy as np
 import pandas as pd
 import random
@@ -710,6 +714,85 @@ class PageTwenty(tk.Frame):
 		resetButton.pack(pady=25)
 		resetButton.bind("<1>", erase_selections)
 
+class TextExtension(Frame):
+    """Extends Frame.  Intended as a container for a Text field.  Better related data handling
+    and has Y scrollbar."""
+
+    def __init__(self, master, textvariable=None, *args, **kwargs):
+
+        super(TextExtension, self).__init__(master)
+        # Init GUI
+
+        self._y_scrollbar = Scrollbar(self, orient=VERTICAL)
+
+        self._text_widget = Text(self, yscrollcommand=self._y_scrollbar.set, *args, **kwargs)
+        self._text_widget.pack(side=LEFT, fill=BOTH, expand=1)
+
+        self._y_scrollbar.config(command=self._text_widget.yview)
+        self._y_scrollbar.pack(side=RIGHT, fill=Y)
+
+        if textvariable is not None:
+            if not (isinstance(textvariable, Variable)):
+                raise TypeError("tkinter.Variable type expected, " + str(type(textvariable)) + " given.".format(type(textvariable)))
+            self._text_variable = textvariable
+            self.var_modified()
+            self._text_trace = self._text_widget.bind('<<Modified>>', self.text_modified)
+            self._var_trace = textvariable.trace("w", self.var_modified)
+
+    def text_modified(self, *args):
+            if self._text_variable is not None:
+                self._text_variable.trace_vdelete("w", self._var_trace)
+                self._text_variable.set(self._text_widget.get(1.0, END))
+                self._var_trace = self._text_variable.trace("w", self.var_modified)
+                self._text_widget.edit_modified(False)
+
+    def var_modified(self, *args):
+        self.set_text(self._text_variable.get())
+        self._text_widget.edit_modified(False)
+
+    def unhook(self):
+        if self._text_variable is not None:
+            self._text_variable.trace_vdelete("w", self._var_trace)
+
+
+    def clear(self):
+        self._text_widget.delete(1.0, END)
+
+    def set_text(self, _value):
+        self.clear()
+        if (_value is not None):
+            self._text_widget.insert(END, _value)
+
+class TextCanvas(tk.Frame):
+    def __init__(self, root):
+        tk.Frame.__init__(self, root)
+        self.canvas = tk.Canvas(root, borderwidth=0, background="#ffffff")
+        self.frame = tk.Frame(self.canvas, background="#ffffff")
+        self.vsb = tk.Scrollbar(root, orient="vertical", command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=self.vsb.set)
+
+        self.vsb.pack(side="right", fill="y")
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.canvas.create_window((4,4), window=self.frame, anchor="nw", 
+                                  tags="self.frame")
+
+        self.frame.bind("<Configure>", self.onFrameConfigure)
+
+        self.populate()
+
+    def populate(self):
+    	'''Put in some fake data'''
+    	result = display_matched_schools()
+    	results = tk.StringVar()
+    	results.set(result)
+    	print("UI Method: ",str(results))
+
+    	tk.Label(self.frame, textvariable=results).grid()
+
+    def onFrameConfigure(self, event):
+        '''Reset the scroll region to encompass the inner frame'''
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
 class ResultsPage(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
@@ -735,13 +818,16 @@ class ResultsPage(tk.Frame):
 			command=lambda: controller.show_frame(DisplayPage))
 		displayButton.pack(pady=25)
 
+	def onFrameConfigure(self, event):
+		'''Reset the scroll region to encompass the inner frame'''
+		self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
 	def calculate_results(self):
-		result = display_matched_schools()
-		results = tk.StringVar()
-		results.set(result)
-		print("UI Method: ",results)
+		TextCanvas(ResultsPage).pack()
+
 		display = tk.Label(self, textvariable=results, font=SECOND_FONT)
 		display.pack()
+		text.window_create(INSERT, window=display)
 
 		label = tk.Label(self, text="Do you want more information on these schools?", font=SECOND_FONT)
 		label.pack(pady=10, padx=10)
@@ -929,7 +1015,7 @@ def calculate_matched_schools(list_of_answers):
 
 
 def display_matched_schools():
-	'''This fucntion displays information about the top 10 matched schools or, if there are less than 10, the names of the schools that matched'''
+	
 	# Might want to comment back this line below in:
 	print("I am being exectured now!")
 	matched_schools = calculate_matched_schools(list_of_answers)
@@ -937,6 +1023,7 @@ def display_matched_schools():
 
 	if len(matched_schools) > 0:
 		n = 0 #counter for # of matches
+			#insert code to print user name, and other information (what states they chose (state_choice), level of strictness as applicable)
 		if len(matched_schools) > 9:
 			#if there are at least 10 schools, we print the top 10
 			response = 'Top 10 school matches from best to last fit: \n'
