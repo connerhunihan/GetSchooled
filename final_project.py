@@ -866,7 +866,6 @@ class DisplayPage(tk.Frame):
 		result = display_school_info()
 		results = tk.StringVar()
 		results.set(result)
-		print("UI Method: ",results)
 		display = tk.Label(self, textvariable=results, anchor="w", justify="left", pady=25,font=SUBHEADER_FONT)
 		display.pack()
 
@@ -989,7 +988,6 @@ def calculate_matched_schools(list_of_answers):
 	choice_column = np.array(choice_column_not_array)
 	if programmer_testing:
 		print(choice_column)
-	print(choices_df.index.size, len(choice_column))
 	choices_df['CHOICE'] = choice_column
 	if programmer_testing:
 		print("TESTING: ", choices_df)
@@ -1084,7 +1082,7 @@ def display_school_info():
 			school_info += '\tSchool Size: {}\n'.format(['Small','Mid-sized','Large'][int(df['ACTUAL SIZE (S/M/L)'][df_index])-1])
 			school_info += '\tTown/City Size: {}\n'.format(['Large City','Mid-sized Town','Small Town'][int(df['URBANIZATION'][df_index])-1])
 			school_info += '\tAdmission Rate: {}'.format(int(round(df['ADM_RATE'][df_index]*100))) + '%' + '\n'
-			school_info += '-'*20 + '\n\n'
+			school_info += '-'*20 + '\n'
 	
 	return str(school_info)
 
