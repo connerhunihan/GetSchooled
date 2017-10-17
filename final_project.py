@@ -12,7 +12,7 @@ by a group of graduate students at Berkeley's School of Information including:
 	Alyssa Li
 	Jake Mainwaring
 	Michelle Peretz
-	Conner Hunihan (www.connerhunihan.com)
+	Conner Hunihan 
 The program is designed to help students find colleges.  
 
 """
@@ -22,6 +22,7 @@ programmer_testing = False
 	
 TITLE_FONT = ("Helvetica", 35)
 HEADER_FONT = ("Verdana", 20)
+INTRO_FONT = ("Verdana", 12)
 SUBHEADER_FONT = ("Verdana", 12)
 label_width = 275
 
@@ -102,7 +103,13 @@ class StartPage(tk.Frame):
 		label.pack(pady=5, padx=5)
 
 		# instantiate Label widget
-		introText = tk.Label(self, text="Explore colleges. \nUnderstand your future.", font=HEADER_FONT)
+		headerText = tk.Label(self, text="Explore colleges. \nUnderstand your future.", font=HEADER_FONT)
+		# make Label widget appear with .pack()
+		headerText.pack(pady=10, padx=10)
+
+		# instantiate introtext widget
+		introText = tk.Label(self, text="""This program will match you with colleges by asking you to choose from one of three fictional colleges. The program will record your answers and will cross-reference the states and match level you enter below. Restart the program at any time by clicking the RESET PROGRAM button.""", 
+			wraplength=label_width+200, font=INTRO_FONT)
 		# make Label widget appear with .pack()
 		introText.pack(pady=10, padx=10)
 
@@ -860,7 +867,7 @@ class DisplayPage(tk.Frame):
 		results = tk.StringVar()
 		results.set(result)
 		print("UI Method: ",results)
-		display = tk.Label(self, textvariable=results, font=SUBHEADER_FONT)
+		display = tk.Label(self, textvariable=results, anchor="w", justify="left", pady=25,font=SUBHEADER_FONT)
 		display.pack()
 
 
