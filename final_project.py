@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import numpy as np
 import pandas as pd
 import random
@@ -19,8 +20,10 @@ The program is designed to help students find colleges.
 #During development print information to verify the code works - set to False to supress printing
 programmer_testing = False
 	
-LARGE_FONT = ("Verdana", 21)
-SECOND_FONT = ("Verdana", 12)
+TITLE_FONT = ("Helvetica", 35)
+HEADER_FONT = ("Verdana", 20)
+SUBHEADER_FONT = ("Verdana", 12)
+label_width = 275
 
 states = []
 match = []
@@ -58,6 +61,7 @@ class GetSchooled(tk.Tk):
 		container.pack(side="top", fill="both", expand=True)
 		container.grid_rowconfigure(0, weight=1)	#0 sets minimum size, weight=1 is a priority thing
 		container.grid_columnconfigure(0, weight=1)
+		tk.Tk.minsize(self, width=750, height=500)
 		
 		self.frames = {}
 		
@@ -94,28 +98,30 @@ class StartPage(tk.Frame):
 	def __init__(self, parent, controller):	
 		'''parent references the container parameter in F()...line61.  controller references the self in F()...line61'''
 		tk.Frame.__init__(self, parent) #parent parameter references GetSchooled
-		label = tk.Label(self, text="GetSchooled", font=LARGE_FONT)
+		label = tk.Label(self, text="GetSchooled", font=TITLE_FONT)
 		label.pack(pady=5, padx=5)
 
 		# instantiate Label widget
-		introText = tk.Label(self, text="THIS IS WHERE THE PROGRAM WILL GO", font=SECOND_FONT)
+		introText = tk.Label(self, text="Explore colleges. \nUnderstand your future.", font=HEADER_FONT)
 		# make Label widget appear with .pack()
 		introText.pack(pady=10, padx=10)
 
 		# create label and state entry widgets, make both appear w pack() function
 		self.stateEntered = tk.StringVar()
-		entryState_label = tk.Label(self, text="Please select which states you are interested in exploring (OR, WA, UT, etc.) \nPlease separate by commas, or enter \"all\" for all states: ").pack()
+		entryState_label = tk.Label(self, text="\n\nPlease select which states you are interested in exploring (OR, WA, UT, etc.) \nPlease separate by commas, or enter \"all\" for all states: ", 
+			wraplength=label_width, font=SUBHEADER_FONT, fg="seashell4").pack()
 		entryState = tk.Entry(self, textvariable=self.stateEntered).pack()
 
 		# create label and match entry widgets, make both appear w pack() function
 		self.matchEntered = tk.StringVar()
-		entryMatch_label = tk.Label(self, text="Please select matching level: \n0 to 4 (0=loose 4=strict): ").pack()
+		entryMatch_label = tk.Label(self, text="\n\nPlease select matching level: \n0 to 4 (0=loose 4=strict) ", 
+			wraplength=label_width, font=SUBHEADER_FONT, fg="seashell4", pady=25).pack()
 		entryMatch = tk.Entry(self, textvariable=self.matchEntered).pack()
 		
 		# create submit button that calls submit_entries function, when pressed
 		submitButton = tk.Button(self, text="Click to submit", 
 			command=lambda: self.submit_entries(PageOne, controller))
-		submitButton.pack()
+		submitButton.pack(pady=25)
 
 	def submit_entries (self, PageOne, app):
 		'''app.GetEntries adds values to their respective lists; show_frame navigates to PageOne screen'''
@@ -127,25 +133,29 @@ class PageOne(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page One", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page One", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=5).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(0))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageTwo))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageTwo))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageTwo))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -156,25 +166,29 @@ class PageTwo(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Two", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Two", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=10).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(1))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageThree))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageThree))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageThree))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -186,25 +200,29 @@ class PageThree(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Three", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Three", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=15).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(2))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageFour))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageFour))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageFour))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -216,25 +234,29 @@ class PageFour(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Four", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Four", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=20).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(3))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageFive))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageFive))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageFive))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -245,54 +267,62 @@ class PageFive(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Five", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Five", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=25).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(4))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageSix))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageSix))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageSix))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
 		resetButton.pack(pady=25)
-		resetButton.bind("<1>", erase_selections)  
+		resetButton.bind("<1>", erase_selections)
 
 class PageSix(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Six", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Six", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=30).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(5))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageSeven))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageSeven))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
-		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageEight))
+		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageSeven))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -303,25 +333,29 @@ class PageSeven(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Seven", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Seven", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=35).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(6))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageEight))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageEight))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageEight))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -332,25 +366,29 @@ class PageEight(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Eight", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Eight", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=40).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(7))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageNine))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageNine))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageNine))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -361,25 +399,29 @@ class PageNine(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Nine", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Nine", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=45).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(8))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageTen))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageTen))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageTen))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -391,25 +433,29 @@ class PageTen(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Ten", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Ten", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=50).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(9))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageEleven))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageEleven))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageEleven))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -420,25 +466,29 @@ class PageEleven(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Eleven", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Eleven", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=55).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(10))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageTwelve))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageTwelve))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageTwelve))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -450,25 +500,29 @@ class PageTwelve(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Twelve", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Twelve", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=60).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(11))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageThirteen))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageThirteen))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageThirteen))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -479,25 +533,29 @@ class PageThirteen(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Thirteen", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Thirteen", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=65).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(12))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageFourteen))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageFourteen))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageFourteen))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -509,25 +567,29 @@ class PageFourteen(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Fourteen", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Fourteen", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=70).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(13))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageFifteen))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageFifteen))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageFifteen))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -538,25 +600,29 @@ class PageFifteen(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Fifteen", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Fifteen", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=75).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(14))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageSixteen))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageSixteen))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageSixteen))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -567,25 +633,29 @@ class PageSixteen(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Sixteen", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Sixteen", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=80).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(15))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageSeventeen))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageSeventeen))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageSeventeen))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -597,25 +667,29 @@ class PageSeventeen(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Seventeen", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Seventeen", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=83).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(16))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageEighteen))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageEighteen))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageEighteen))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -626,25 +700,29 @@ class PageEighteen(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Eighteen", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Eighteen", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=87).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(17))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageNineteen))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageNineteen))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageNineteen))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -655,25 +733,29 @@ class PageNineteen(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Nineteen", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Nineteen", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=91).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(18))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(PageTwenty))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(PageTwenty))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(PageTwenty))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -684,25 +766,29 @@ class PageTwenty(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Page Twenty", font=LARGE_FONT)
+		
+		label = tk.Label(self, text="Page Twenty", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
+
+		progressbar = ttk.Progressbar(self, length=260, maximum=100, mode='determinate', value=95).pack()
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		colleges = tk.StringVar()
 		colleges.set(college_selection(19))
-		display = tk.Label(self, textvariable=colleges)
+		display = tk.Label(self, textvariable=colleges, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		# button click navigates to next page, button.bind handler records the button click value
+		
 		button1 = tk.Button(self, text="Select College 1", command=lambda: controller.show_frame(ResultsPage))
 		button1.pack()
-		button1.bind("<1>", record_button_1)
+		button1.bind("<1>", record_button_1)		
 		button1 = tk.Button(self, text="Select College 2", command=lambda: controller.show_frame(ResultsPage))
 		button1.pack()
 		button1.bind("<1>", record_button_2)
 		button1 = tk.Button(self, text="Select College 3", command=lambda: controller.show_frame(ResultsPage))
 		button1.pack()
-		button1.bind("<1>", record_button_3)
+		button1.bind("<1>", record_button_3)		
 
 		resetButton = tk.Button(self, text="RESET PROGRAM", 
 			command=lambda: controller.show_frame(StartPage))
@@ -713,67 +799,68 @@ class ResultsPage(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="Results", font=LARGE_FONT)
+		label = tk.Label(self, text="Results", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		results = tk.StringVar()
-
 		results.set(' ') ####
 
 		display = tk.Label(self, textvariable=results)
-		display.pack()
+		display.pack(pady=25, side="bottom")
+
+		calcButton_label = tk.Label(self, text="\nTo calculate your results, click on the button below.", 
+			wraplength=label_width+25, font=SUBHEADER_FONT, fg="seashell4").pack()
 
 		calcButton = tk.Button(self, text="Calculate Results!", command=lambda: controller.show_frame(ResultsPage))
 		calcButton.pack()
 		calcButton.bind("<1>", lambda event, self=self: self.calculate_results())
-
-		displayButton = tk.Button(self, text="School Info", 
-			command=lambda: controller.show_frame(DisplayPage))
-		displayButton.pack(pady=25)
+	
+		displayButton = tk.Button(self, text="School Info", anchor="s", command=lambda: controller.show_frame(DisplayPage))
+		displayButton.pack(pady=25, side="bottom")
 
 	def calculate_results(self):
 		result = display_matched_schools()
 		results = tk.StringVar()
 		results.set(result)
-		print("UI Method: ",results)
-		display = tk.Label(self, textvariable=results, font=SECOND_FONT)
+		
+		display = tk.Label(self, textvariable=results, anchor="w", justify="left", pady=25)
 		display.pack()
 
-		label = tk.Label(self, text="Do you want more information on these schools?", font=SECOND_FONT)
+		label = tk.Label(self, text="Do you want more information on these schools?", font=SUBHEADER_FONT)
 		label.pack(pady=10, padx=10)
 
-
+	
 class DisplayPage(tk.Frame):
 	'''this class instantiates as a whole-window frame'''
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
-		label = tk.Label(self, text="School Information", font=LARGE_FONT)
+		label = tk.Label(self, text="School Information", font=HEADER_FONT)
 		label.pack(pady=10, padx=10)
 
-		calcButton = tk.Button(self, text="Show Detailed Information!", command=lambda: controller.show_frame(DisplayPage))
-		calcButton.pack()
-		calcButton.bind("<1>", lambda event, self=self: self.get_school_info())
+		moreInfo_label = tk.Label(self, text="\nTo view more information about the schools you matched with, click on the button below.",
+			wraplength=label_width, font=SUBHEADER_FONT, fg="seashell4").pack() 
+		moreInfo = tk.Button(self, text="More Information!", command=lambda: controller.show_frame(DisplayPage))
+		moreInfo.pack()
+		moreInfo.bind("<1>", lambda event, self=self: self.get_school_info())
 
 		# pulls hypothetical colleges as a string returned from college_selection function
 		results = tk.StringVar()
 		results.set(' ') 
-		display = tk.Label(self, textvariable=results)
+		display = tk.Label(self, textvariable=results, anchor="w", justify="left", pady=25)
 		display.pack()
 
 		startOverButton = tk.Button(self, text="START OVER", 
 			command=lambda: controller.show_frame(StartPage))
-		startOverButton.pack(pady=25)
+		startOverButton.pack(pady=25, side="bottom")
 		startOverButton.bind("<1>", erase_selections)
-#==============================================================================
-# 
-#==============================================================================
+
 	def get_school_info(self):
 		result = display_school_info()
 		results = tk.StringVar()
 		results.set(result)
 		print("UI Method: ",results)
-		display = tk.Label(self, textvariable=results, font=SECOND_FONT)
+		display = tk.Label(self, textvariable=results, font=SUBHEADER_FONT)
 		display.pack()
 
 
@@ -937,10 +1024,10 @@ def display_matched_schools():
 		n = 0 #counter for # of matches
 		if len(matched_schools) > 9:
 			#if there are at least 10 schools, we print the top 10
-			response = 'Top 10 school matches from best to last fit: \n'
+			response = 'Top 4 school matches from best to last fit: \n\n'
 		else:
 			#if there are less than 10 matches, we print this text
-			response = 'School matches from best to last fit: \n'
+			response = 'School matches from best to last fit: \n\n'
 		
 		#loop for all matched schools
 		for i in range(len(matched_schools)):
