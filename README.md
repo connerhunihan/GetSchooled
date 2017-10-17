@@ -1,13 +1,9 @@
-# Info206_GroupI
-Repo for Group I's final project in Info 206
+# Info206_GroupI - GetSchooled
 
-Our goal is to improve the search process for prospective college students. While there is plenty of information out there, it can be overwhelming for applicants to sift through and find the most relevant data. By aggregating this data, conducting analysis, and presenting it in a digestible way, we hope to ease the burden of searching for colleges.
+Group members: Jake Mainwaring (jmainwaring@berkeley.edu,  GitHub username = jmainwaring), Alyssa Li (alyssa_li@berkeley.edu,  GitHub username = alyssali), Michelle Peretz (maperetz@berkeley.edu,  GitHub username = michelleap), Conner Hunihan (conner.hunihan@berkeley.edu,  GitHub username = connerhunihan)
 
-*Included with the code you should do a ~one page write up of what you completed, any you challenges you faced, as well as how we should go about testing and using your project code. This information can be included in the README file of the Github repository or as a separate document contained within the repository.*
+The goal of our project was to help prospective students explore colleges. To approach this, we broke the process into a few steps – filtering out certain schools by location, determining which aspects of a college are most important to the user, and pairing these two data points to recommend certain colleges for further exploration.
 
-Members:
-NAME		    EMAIL			GIThUB USERNAME
-Jake Mainwaring.    jmainwaring@berkeley.edu    jmainwaring
-Alyssa Li	    alyssa_li@berkeley.edu	alyssali
-Michelle Peretz	    maperetz@berkeley.edu	michelleap
-Conner Hunihan	    conner.hunihan@berkeley.edu connerhunihan
+You'll notice that the code is broken up into two components - the GUI and the program itself. The first ~780 lines are all related to the GUI, which was built using tkinter. The rest of the code runs the program's logic/number crunching - user selecting  schools from fictional scenarios, training the model, and recommending real schools. This portion utilizes a few libraries, including sklearn, numpy, and pandas.              
+
+When testing the program, make sure you have downloaded the two CSV files. If they are downloaded and you still are having trouble accessing them, you may need to set a more specific path within the following quotation marks...df = pd.read_csv('ConsolidatedSchools.csv') and choices_df = pd.read_csv('ProjectScenarios_revisedmp.csv'). Otherwise, the testing should be straightforward. Run the program, input states, select a looseness level, make your twenty selections from the fictional scenarios, click "Calculate Results!", and click "School Info" then "Show Detailed Information" for more info on your matches.       
